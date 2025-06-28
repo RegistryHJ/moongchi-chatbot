@@ -26,7 +26,7 @@ app = FastAPI(
 # ChatbotController의 라우터를 메인 앱에 포함시킵니다.
 # /api/v1/chatbot 경로로 들어오는 모든 요청은 chatbot_controller가 처리합니다.
 app.include_router(
-    chatbot_controller.router,
+    chat_controller.router,
     prefix="/api/v2/chat",
     tags=["Chatbot"]
 )
