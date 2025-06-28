@@ -19,7 +19,7 @@ class AnthropicManager:
     self.model_name = model_name
     print(f"AnthropicManager initialized with model: {self.model_name}")
 
-  async def generate(self, prompt: str, system_message: str, max_new_tokens: int = 1024):
+  async def generate(self, prompt: str, system_prompt: str, max_new_tokens: int = 1024):
     """
     주어진 프롬프트를 기반으로 텍스트를 생성합니다.
     """
@@ -27,7 +27,7 @@ class AnthropicManager:
       message = await self.client.messages.create(
           model=self.model_name,
           max_tokens=max_new_tokens,
-          system=system_message,
+          system=system_prompt,
           messages=[
               {"role": "user", "content": prompt}
           ]
