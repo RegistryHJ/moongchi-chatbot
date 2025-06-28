@@ -13,19 +13,28 @@ class EmbeddingGenerator:
       "mappings": {
           "properties": {
               "product_id": {"type": "integer"},
-              "product_name": {"type": "text", "analyzer": "nori"},
+              "product_name": {"type": "text"},
               "price": {"type": "integer"},
               "product_url": {"type": "keyword"},
               "img_url": {"type": "keyword"},
-              "category_path": {"type": "text", "analyzer": "nori"},
+              "category_path": {"type": "text"},
               "embedding": {
-                  "type": "dense_vector",
-                  "dims": 768,
-                  "index": True,
-                  "similarity": "cosine"
+                  "type": "knn_vector",
+                  "dimension": 768,
+                  "method": {
+                      "name": "hnsw",
+                      "space_type": "cosinesimil",
+                      "engine": "lucene"
+                  }
               }
           }
-      }
+      },
+      "settings": {
+          "index": {
+              "knn": True,
+              "knn.algo_param.ef_search": 100
+          }
+      },
   }
 
   def __init__(self, mysql_manager, os_manager, opensearch_index):
