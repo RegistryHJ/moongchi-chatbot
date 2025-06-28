@@ -20,7 +20,7 @@ class OpenAIManager:
     self.model_name = model_name
     print(f"OpenAIManager initialized with model: {self.model_name}")
 
-  async def generate(self, prompt: str, system_message: str = "You are a helpful assistant.", max_new_tokens: int = 1024):
+  async def generate(self, prompt: str, system_prompt: str = "You are a helpful assistant.", max_new_tokens: int = 1024):
     """
     주어진 프롬프트를 기반으로 텍스트를 생성합니다.
     """
@@ -28,7 +28,7 @@ class OpenAIManager:
       completion = await self.client.chat.completions.create(
           model=self.model_name,
           messages=[
-              {"role": "system", "content": system_message},
+              {"role": "system", "content": system_prompt},
               {"role": "user", "content": prompt}
           ],
           max_tokens=max_new_tokens
