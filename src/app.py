@@ -50,7 +50,7 @@ class ApplicationContainer:
         opensearch_index=opensearch_index
     )
 
-    self.chatbot_service = ChatbotService(
+    self.chat_service = ChatService(
         prompt_generator=self.prompt_generator
     )
 
@@ -81,6 +81,6 @@ class ApplicationContainer:
 
 app_container = ApplicationContainer()
 
-def get_chatbot_service() -> ChatbotService:
+def get_chat_service() -> ChatService:
   """ChatbotService의 인스턴스를 반환하는 의존성 주입용 함수입니다."""
   return app_container.chat_service
