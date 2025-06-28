@@ -8,7 +8,7 @@ from src.managers.models.anthropic_manager import AnthropicManager
 from src.managers.models.exaone_manager import ExaoneManager
 from src.generators.prompt_generator import PromptGenerator
 from src.generators.embedding_generator import EmbeddingGenerator
-from api.services.chatbot_service import ChatbotService
+from api.services.chat_service import ChatService
 
 class ApplicationContainer:
   """
@@ -26,6 +26,7 @@ class ApplicationContainer:
     self.mysql_manager = MySQLManager()
 
     llm_provider = os.getenv("LLM_PROVIDER", "exaone").lower()
+    opensearch_index = os.getenv("OPENSEARCH_INDEX")
 
     if llm_provider == "openai":
       self.llm_manager = OpenAIManager()
@@ -45,7 +46,8 @@ class ApplicationContainer:
 
     self.embedding_generator = EmbeddingGenerator(
         mysql_manager=self.mysql_manager,
-        os_manager=self.os_manager
+        os_manager=self.os_manager,
+        opensearch_index=opensearch_index
     )
 
     self.chatbot_service = ChatbotService(
@@ -81,4 +83,4 @@ app_container = ApplicationContainer()
 
 def get_chatbot_service() -> ChatbotService:
   """ChatbotService의 인스턴스를 반환하는 의존성 주입용 함수입니다."""
-  return app_container.chatbot_service
+  return app_container.chat_service
