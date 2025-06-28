@@ -1,4 +1,5 @@
 import torch
+import asyncio
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 class ExaoneManager:
@@ -38,13 +39,13 @@ class ExaoneManager:
         self.tokenizer = None
         raise
 
-  def generate(self, prompt: str, system_message: str = "You are a helpful assistant.", max_new_tokens: int = 1024):
+  async def generate(self, prompt: str, system_prompt: str = "You are a helpful assistant.", max_new_tokens: int = 1024):
     """
     주어진 프롬프트를 기반으로 텍스트를 생성합니다.
 
     Args:
         prompt (str): 사용자 입력 프롬프트.
-        system_message (str): 모델의 역할을 정의하는 시스템 메시지.
+        system_prompt (str): 모델의 역할을 정의하는 시스템 메시지.
         max_new_tokens (int): 생성할 최대 토큰 수.
 
     Returns:
@@ -54,26 +55,26 @@ class ExaoneManager:
       print("Model is not loaded. Please call load_model() first.")
       return None
 
-    messages = [
-        {"role": "system", "content": system_message},
-        {"role": "user", "content": prompt}
-    ]
+    def _blocking_generate():
+      messages = [
+          {"role": "system", "content": system_prompt},
+          {"role": "user", "content": prompt}
+      ]
 
-    # 채팅 템플릿을 적용하여 입력 ID 생성
-    input_ids = self.tokenizer.apply_chat_template(
-        messages,
-        tokenize=True,
-        add_generation_prompt=True,
-        return_tensors="pt"
-    ).to(self.device)
+      input_ids = self.tokenizer.apply_chat_template(
+          messages, tokenize=True, add_generation_prompt=True, return_tensors="pt"
+      ).to(self.device)
 
-    # 텍스트 생성
-    output_tokens = self.model.generate(
-        input_ids,
-        eos_token_id=self.tokenizer.eos_token_id,
-        max_new_tokens=max_new_tokens
-    )
+      output_tokens = self.model.generate(
+          input_ids,
+          eos_token_id=self.tokenizer.eos_token_id,
+          max_new_tokens=max_new_tokens,
+          pad_token_id=self.tokenizer.eos_token_id
+      )
 
-    # 입력 부분을 제외하고 생성된 부분만 디코딩
-    response_tokens = output_tokens[0][input_ids.shape[-1]:]
-    return self.tokenizer.decode(response_tokens, skip_special_tokens=True)
+      response_tokens = output_tokens[0][input_ids.shape[-1]:]
+      return self.tokenizer.decode(response_tokens, skip_special_tokens=True)
+
+    loop = asyncio.get_running_loop()
+    response_text = await asyncio.to_thread(_blocking_generate)
+    return response_text
