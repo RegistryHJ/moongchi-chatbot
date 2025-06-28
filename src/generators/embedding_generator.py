@@ -16,7 +16,7 @@ class EmbeddingGenerator:
               "product_name": {"type": "text", "analyzer": "nori"},
               "price": {"type": "integer"},
               "product_url": {"type": "keyword"},
-              "image_url": {"type": "keyword"},
+              "img_url": {"type": "keyword"},
               "category_path": {"type": "text", "analyzer": "nori"},
               "embedding": {
                   "type": "dense_vector",
@@ -110,7 +110,7 @@ class EmbeddingGenerator:
         document = {
             "product_id": product['product_id'], "product_name": product['product_name'],
             "price": product['price'], "product_url": product['product_url'],
-            "image_url": product['image_url'], "category_path": category_path,
+            "img_url": product['img_url'], "category_path": category_path,
             "embedding": embedding_vector
         }
         action = {"_index": self.opensearch_index, "_id": product['product_id'], "_source": document}
