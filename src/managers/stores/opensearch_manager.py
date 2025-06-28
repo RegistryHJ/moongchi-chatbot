@@ -32,7 +32,7 @@ class OpenSearchManager:
           hosts=[{'host': self.host, 'port': self.port}],
           http_auth=(self.user, self.password),
           use_ssl=True,
-          verify_certs=True,
+          verify_certs=False,
           ssl_assert_hostname=False,
           ssl_show_warn=False,
       )
