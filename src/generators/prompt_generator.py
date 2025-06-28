@@ -82,7 +82,22 @@ class PromptGenerator:
   def _format_recommendation_response(self, query: str, products: List[Dict[str, Any]]) -> str:
     if not products:
       return "죄송해요, 리더님. 지금은 딱 맞는 상품을 찾지 못했어요. 다른 키워드로 질문해주시겠어요?"
-    response_lines = [f"\"{query}\"에 대한 상품을 찾으시는군요! Ai 뭉치가 몇 가지 추천해 드릴게요!", "---", "### 추천 상품"]
+    conversational_keywords = [
+        # 욕구/희망 표현
+        '싶어', '싶다', '원해', '땡겨', '땡긴다',
+        # 요청/질문 표현
+        '추천', '알려줘', '찾아줘', '어때', '궁금', '뭐가', '어떤', '어떻게',
+        # 일반적인 동사/서술어
+        '먹고', '하고', '쓰는', '쓸만한', '입을', '바를', '좋아', '필요해',
+        # 구어체 표현
+        '좀', '같은', '같은거', '있을까', '있나요'
+    ]
+    is_conversational = len(query) > 10 or any(kw in query for kw in conversational_keywords)
+
+    if is_conversational:
+      response_lines = [f"리더님의 요청에 딱 맞는 상품을 찾아봤어요! Ai 뭉치가 몇 가지 추천해 드릴게요!", "---", "### 추천 상품"]
+    else:
+      response_lines = [f"'{query}'에 대한 상품을 찾으시는군요! Ai 뭉치가 몇 가지 추천해 드릴게요!", "---", "### 추천 상품"]
     wrapper = textwrap.TextWrapper(width=60, subsequent_indent="  ")
     for i, p in enumerate(products, 1):
       response_lines.extend([f"{i}. [{p['name']}]({p['product_url']})", f"- **가격**: {p['price']:,}원", f"- **유사도**: {p['similarity']:.2f}%"])
