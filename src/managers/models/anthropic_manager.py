@@ -15,16 +15,16 @@ class AnthropicManager:
     if not api_key:
       raise ValueError("환경 변수에서 'ANTHROPIC_API_KEY'를 찾을 수 없습니다.")
 
-    self.client = anthropic.Anthropic(api_key=api_key)
+    self.client = anthropic.AsyncAnthropic(api_key=api_key)
     self.model_name = model_name
     print(f"AnthropicManager initialized with model: {self.model_name}")
 
-  def generate(self, prompt: str, system_message: str, max_new_tokens: int = 1024):
+  async def generate(self, prompt: str, system_message: str, max_new_tokens: int = 1024):
     """
     주어진 프롬프트를 기반으로 텍스트를 생성합니다.
     """
     try:
-      message = self.client.messages.create(
+      message = await self.client.messages.create(
           model=self.model_name,
           max_tokens=max_new_tokens,
           system=system_message,

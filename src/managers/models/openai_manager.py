@@ -1,5 +1,6 @@
 import os
-from openai import OpenAI, OpenAIError
+import asyncio
+from openai import AsyncOpenAI, OpenAIError
 
 class OpenAIManager:
   """
@@ -15,16 +16,16 @@ class OpenAIManager:
     if not api_key:
       raise ValueError("환경 변수에서 'OPENAI_API_KEY'를 찾을 수 없습니다.")
 
-    self.client = OpenAI(api_key=api_key)
+    self.client = AsyncOpenAI(api_key=api_key)
     self.model_name = model_name
     print(f"OpenAIManager initialized with model: {self.model_name}")
 
-  def generate(self, prompt: str, system_message: str = "You are a helpful assistant.", max_new_tokens: int = 1024):
+  async def generate(self, prompt: str, system_message: str = "You are a helpful assistant.", max_new_tokens: int = 1024):
     """
     주어진 프롬프트를 기반으로 텍스트를 생성합니다.
     """
     try:
-      completion = self.client.chat.completions.create(
+      completion = await self.client.chat.completions.create(
           model=self.model_name,
           messages=[
               {"role": "system", "content": system_message},
