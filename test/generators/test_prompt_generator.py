@@ -33,7 +33,6 @@ async def main():
       llm_manager = OpenAIManager()
     elif llm_provider == "exaone":
       llm_manager = ExaoneManager()
-      llm_manager.load_model()
     elif llm_provider == "anthropic":
       llm_manager = AnthropicManager()
 
@@ -52,8 +51,8 @@ async def main():
     print("\nStep 1: Connecting to services and loading models...")
     os_manager.connect()
     prompt_generator.load_embedding_model()  # PromptGenerator 내부의 임베딩 모델 로드
-    # if isinstance(llm_manager, ExaoneManager):
-    #     llm_manager.load_model() # 로컬 LLM의 경우 모델 로딩
+    if isinstance(llm_manager, ExaoneManager):
+      llm_manager.load_model()  # 로컬 LLM의 경우 모델 로딩
     print("...Services connected and models loaded successfully.\n")
 
     # --- 4. 대화 시나리오 시뮬레이션 ---
