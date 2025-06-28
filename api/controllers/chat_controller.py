@@ -17,7 +17,7 @@ class ChatController(BaseModel):
 @router.post("", response_model=Dict[str, Any])
 async def handle_chat(
     request: ChatController,
-    service: ChatbotService = Depends(get_chat_service)
+    service: ChatService = Depends(get_chat_service)
 ):
   """
   POST /api/v1/chatbot 요청을 처리합니다.
