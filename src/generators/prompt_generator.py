@@ -66,7 +66,7 @@ class PromptGenerator:
           {
               "product_id": hit['_source'].get('product_id'), "name": hit['_source'].get('product_name'),
               "price": hit['_source'].get('price'), "category_name": hit['_source'].get('category_path'),
-              "img_url": hit['_source'].get('image_url'), "product_url": hit['_source'].get('product_url'),
+              "img_url": hit['_source'].get('img_url'), "product_url": hit['_source'].get('product_url'),
               "similarity": round(hit.get('_score', 0.0) * 100, 2)
           } for hit in hits
       ]
