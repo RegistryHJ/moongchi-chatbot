@@ -95,9 +95,9 @@ class PromptGenerator:
     is_conversational = len(query) > 10 or any(kw in query for kw in conversational_keywords)
 
     if is_conversational:
-      response_lines = [f"리더님의 요청에 딱 맞는 상품을 찾아봤어요! Ai 뭉치가 몇 가지 추천해 드릴게요!", "---", "### 추천 상품"]
+      response_lines = [f"**<p>리더님의 요청에 딱 맞는 상품을 찾아봤어요! Ai 뭉치가 몇 가지 추천해 드릴게요!</p>**", "", "---", "### 추천 상품"]
     else:
-      response_lines = [f"'{query}'에 대한 상품을 찾으시는군요! Ai 뭉치가 몇 가지 추천해 드릴게요!", "---", "### 추천 상품"]
+      response_lines = [f"**<p>'{query}'에 대한 상품을 찾으시는군요! Ai 뭉치가 몇 가지 추천해 드릴게요!</p>**", "", "---", "### 추천 상품"]
     wrapper = textwrap.TextWrapper(width=60, subsequent_indent="  ")
     for i, p in enumerate(products, 1):
       response_lines.extend([f"{i}. [{p['name']}]({p['product_url']})", f"- **가격**: {p['price']:,}원", f"- **유사도**: {p['similarity']:.2f}%"])
